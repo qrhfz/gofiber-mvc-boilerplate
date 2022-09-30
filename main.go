@@ -12,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/template/html"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/joho/godotenv"
 	"qori.dev/fiber-todo/todo"
 )
 
@@ -19,6 +20,7 @@ import (
 var viewsfs embed.FS
 
 func main() {
+	godotenv.Load()
 	poolConfig, err := pgxpool.ParseConfig(os.Getenv("DATABASE_URL"))
 	dbpool, err := pgxpool.NewWithConfig(context.Background(), poolConfig)
 	if err != nil {
