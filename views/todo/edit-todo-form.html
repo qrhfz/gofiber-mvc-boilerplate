@@ -1,0 +1,10 @@
+<form action="/{{.Id}}" method="post">
+    <label for="todo">Todo</label>
+    <input type="text" name="todo" value="{{.Todo}}" />
+    <br>
+    <label for="done">Done</label>
+    <input type="checkbox" name="done" value="done" {{if .Done}} checked {{end}}>
+    <br>
+    <br>
+    <input type="submit" value="Submit">
+</form>

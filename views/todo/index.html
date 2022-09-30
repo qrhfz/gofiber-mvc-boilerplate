@@ -1,0 +1,14 @@
+<p>
+    hello
+</p>
+
+<ul>
+    {{range .}}
+    <li>
+        {{.Todo}}
+        {{if .Done}}✅{{end}}
+        <a href="/{{.Id}}">[EDIT]</a>
+        <a href="/{{.Id}}/delete">[DELETE]</a>
+    </li>
+    {{end}}
+</ul>

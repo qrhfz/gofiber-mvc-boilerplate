@@ -11,9 +11,10 @@ func RegisterRoute(app *fiber.App, dbpool *pgxpool.Pool) {
 	}
 
 	group := app.Group("/")
-	group.Post("/", userController.addTodo)
 	group.Get("/", userController.listAllTodo)
-	group.Get("/:id<int>", userController.getTodo)
-	group.Get("/:id<int>/edit", userController.editTodo)
+	group.Get("/new", userController.newTodo)
+	group.Post("/new", userController.saveNewTodo)
+	group.Get("/:id<int>", userController.editTodo)
+	group.Post("/:id<int>", userController.saveEditTodo)
 	group.Get("/:id<int>/delete", userController.deleteTodo)
 }
