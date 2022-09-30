@@ -13,7 +13,7 @@ type TodoController struct {
 }
 
 func (tc *TodoController) listAllTodo(ctx *fiber.Ctx) error {
-	rows, err := tc.DbPool.Query(context.Background(), "SELECT * FROM todo")
+	rows, err := tc.DbPool.Query(context.Background(), "SELECT * FROM todo;")
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
@@ -43,7 +43,7 @@ func (tc *TodoController) newTodo(ctx *fiber.Ctx) error {
 
 func (tc *TodoController) saveNewTodo(ctx *fiber.Ctx) error {
 	todo := ctx.FormValue("todo")
-	statement := "insert into todo(todo, done) values($1, FALSE)"
+	statement := "INSERT into todo(todo, done) values($1, FALSE);"
 	_, err := tc.DbPool.Exec(context.Background(), statement, todo)
 
 	if err != nil {
@@ -58,7 +58,7 @@ func (tc *TodoController) editTodo(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).SendString("Bad Request")
 	}
-	statement := "select id, todo, done from todo where id = $1"
+	statement := "SELECT id, todo, done from todo where id = $1;"
 
 	todo := TodoModel{}
 	row := tc.DbPool.QueryRow(context.Background(), statement, id)
@@ -80,7 +80,7 @@ func (tc *TodoController) saveEditTodo(ctx *fiber.Ctx) error {
 
 	}
 
-	statement := "update todo set todo=$2, done=$3 where id = $1"
+	statement := "UPDATE todo set todo=$2, done=$3 where id = $1;"
 
 	todo := ctx.FormValue("todo")
 	formDone := ctx.FormValue("done")
@@ -106,7 +106,7 @@ func (tc *TodoController) deleteTodo(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).SendString("Bad Request")
 	}
-	statement := "delete from todo where id = $1"
+	statement := "DELETE from todo where id = $1;"
 
 	_, err = tc.DbPool.Exec(context.Background(), statement, id)
 
