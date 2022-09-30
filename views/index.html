@@ -1,0 +1,12 @@
+<p>
+    hello
+</p>
+
+<ul>
+    {{range .}}
+    <li>
+        {{.Todo}}
+        <a href="{{.Id}}/edit">[EDIT]</a>
+    </li>
+    {{end}}
+</ul>
