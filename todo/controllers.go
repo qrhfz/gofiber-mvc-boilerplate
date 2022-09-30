@@ -8,12 +8,12 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type UserController struct {
+type TodoController struct {
 	DbPool *pgxpool.Pool
 }
 
-func (uc *UserController) listAllTodo(ctx *fiber.Ctx) error {
-	rows, err := uc.DbPool.Query(context.Background(), "SELECT * FROM todo")
+func (tc *TodoController) listAllTodo(ctx *fiber.Ctx) error {
+	rows, err := tc.DbPool.Query(context.Background(), "SELECT * FROM todo")
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
@@ -36,15 +36,15 @@ func (uc *UserController) listAllTodo(ctx *fiber.Ctx) error {
 	return ctx.Render("views/todo/index", todos)
 }
 
-func (uc *UserController) newTodo(ctx *fiber.Ctx) error {
+func (tc *TodoController) newTodo(ctx *fiber.Ctx) error {
 
 	return ctx.Render("views/todo/new-todo-form", nil)
 }
 
-func (uc *UserController) saveNewTodo(ctx *fiber.Ctx) error {
+func (tc *TodoController) saveNewTodo(ctx *fiber.Ctx) error {
 	todo := ctx.FormValue("todo")
 	statement := "insert into todo(todo, done) values($1, FALSE)"
-	_, err := uc.DbPool.Exec(context.Background(), statement, todo)
+	_, err := tc.DbPool.Exec(context.Background(), statement, todo)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
@@ -52,7 +52,7 @@ func (uc *UserController) saveNewTodo(ctx *fiber.Ctx) error {
 	return ctx.Redirect("/")
 }
 
-func (uc *UserController) editTodo(ctx *fiber.Ctx) error {
+func (tc *TodoController) editTodo(ctx *fiber.Ctx) error {
 	id, err := strconv.Atoi(ctx.Params("id"))
 
 	if err != nil {
@@ -61,7 +61,7 @@ func (uc *UserController) editTodo(ctx *fiber.Ctx) error {
 	statement := "select id, todo, done from todo where id = $1"
 
 	todo := TodoModel{}
-	row := uc.DbPool.QueryRow(context.Background(), statement, id)
+	row := tc.DbPool.QueryRow(context.Background(), statement, id)
 
 	err = row.Scan(&todo.Id, &todo.Todo, &todo.Done)
 
@@ -72,7 +72,7 @@ func (uc *UserController) editTodo(ctx *fiber.Ctx) error {
 	return ctx.Render("views/todo/edit-todo-form", todo)
 
 }
-func (uc *UserController) saveEditTodo(ctx *fiber.Ctx) error {
+func (tc *TodoController) saveEditTodo(ctx *fiber.Ctx) error {
 	id, err := strconv.Atoi(ctx.Params("id"))
 
 	if err != nil {
@@ -91,7 +91,7 @@ func (uc *UserController) saveEditTodo(ctx *fiber.Ctx) error {
 		done = true
 	}
 
-	_, err = uc.DbPool.Exec(context.Background(), statement, id, todo, done)
+	_, err = tc.DbPool.Exec(context.Background(), statement, id, todo, done)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
@@ -100,7 +100,7 @@ func (uc *UserController) saveEditTodo(ctx *fiber.Ctx) error {
 	return ctx.Redirect("/")
 }
 
-func (uc *UserController) deleteTodo(ctx *fiber.Ctx) error {
+func (tc *TodoController) deleteTodo(ctx *fiber.Ctx) error {
 	id, err := strconv.Atoi(ctx.Params("id"))
 
 	if err != nil {
@@ -108,7 +108,7 @@ func (uc *UserController) deleteTodo(ctx *fiber.Ctx) error {
 	}
 	statement := "delete from todo where id = $1"
 
-	_, err = uc.DbPool.Exec(context.Background(), statement, id)
+	_, err = tc.DbPool.Exec(context.Background(), statement, id)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")

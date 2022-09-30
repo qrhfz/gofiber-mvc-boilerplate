@@ -6,15 +6,15 @@ import (
 )
 
 func RegisterRoute(app *fiber.App, dbpool *pgxpool.Pool) {
-	userController := UserController{
+	todoController := TodoController{
 		DbPool: dbpool,
 	}
 
 	group := app.Group("/")
-	group.Get("/", userController.listAllTodo)
-	group.Get("/new", userController.newTodo)
-	group.Post("/new", userController.saveNewTodo)
-	group.Get("/:id<int>", userController.editTodo)
-	group.Post("/:id<int>", userController.saveEditTodo)
-	group.Get("/:id<int>/delete", userController.deleteTodo)
+	group.Get("/", todoController.listAllTodo)
+	group.Get("/new", todoController.newTodo)
+	group.Post("/new", todoController.saveNewTodo)
+	group.Get("/:id<int>", todoController.editTodo)
+	group.Post("/:id<int>", todoController.saveEditTodo)
+	group.Get("/:id<int>/delete", todoController.deleteTodo)
 }
